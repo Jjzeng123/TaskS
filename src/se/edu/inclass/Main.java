@@ -1,10 +1,12 @@
 package se.edu.inclass;
 
+import org.w3c.dom.ls.LSOutput;
 import se.edu.inclass.data.DataManager;
 import se.edu.inclass.task.Deadline;
 import se.edu.inclass.task.Task;
 import se.edu.inclass.task.TaskNameComparator;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,6 @@ public class Main {
         System.out.println("Welcome to Task (stream) manager\n");
         DataManager dm = new DataManager("./data/data.txt");
         ArrayList<Task> tasksData = dm.loadData();
-
         printData(tasksData);
         System.out.println();
         System.out.println("Printing deadlines");
@@ -27,6 +28,7 @@ public class Main {
         ArrayList<Task> filteredList = filterTaskListUsingStreams(tasksData, "11");
         System.out.println("filtered list of data");
         printData(filteredList);
+
     }
 
     private static int countDeadlines(ArrayList<Task> tasksData) {
@@ -39,13 +41,30 @@ public class Main {
         return count;
     }
 
+    private static int countDeadlinesUsingStream(ArrayList<Task> tasks) {
+        int count = (int)tasks.stream()
+                .filter(t -> t instanceof Deadline)
+                .count();
+
+        return count;
+    }
+
     public static void printData(ArrayList<Task> tasksData) {
+        System.out.println("Printing data using iteration");
         for (Task t : tasksData) {
             System.out.println(t);
         }
     }
 
+    public static void printDataUsingStreams(ArrayList<Task> tasks) {
+
+        System.out.println("Printing data using stream");
+        tasks.stream()     //convert to stream
+                .forEach(System.out::println);
+    }
+
     public static void printDeadlines(ArrayList<Task> tasksData) {
+        System.out.println("Printing Deadlines using iteration");
         for (Task t : tasksData) {
             if (t instanceof Deadline) {
                 System.out.println(t);
@@ -67,5 +86,6 @@ public class Main {
                 .collect(Collectors.toList());
 
         return filteredList;
+
     }
 }
